@@ -1,3 +1,3 @@
 # ansible_dev
 
-This contains all practive ansible playbooks
+This contains all practice ansible playbooks
