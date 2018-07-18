@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: install redhat-lsb-core
+      yum:
+        name: ['redhat-lsb-core']
+        disablerepo: RHEL7
+    - name: add motd
+      copy:
+        src: motd
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: 0644
