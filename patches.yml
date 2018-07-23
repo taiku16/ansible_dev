@@ -5,8 +5,12 @@
   tasks:
     - name: install redhat-lsb-core
       yum:
-        name: ['redhat-lsb-core']
+        name: "{{ item }}"
         disablerepo: RHEL7
+      with_items:
+        - redhat-lsb-core
+        - epel-release
+        - python-pip
     - name: add motd
       copy:
         src: motd
