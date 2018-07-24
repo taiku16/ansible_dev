@@ -3,7 +3,7 @@
   become: yes
   become_method: sudo
   tasks:
-    - name: install redhat-lsb-core
+    - name: install epel, python
       yum:
         name: "{{ item }}"
         disablerepo: RHEL7
@@ -11,6 +11,8 @@
         - redhat-lsb-core
         - epel-release
         - python-pip
+        - python-devel
+        - yum-utils
     - name: add motd
       copy:
         src: motd
@@ -18,3 +20,15 @@
         owner: root
         group: root
         mode: 0644
+    - name: install the 'Development tools' package group
+      yum:
+        name: "@development"
+        state: present
+        disablerepo: RHEL7
+        update_cache: yes
+    - name: install pip
+      easy_install: name=pip state=latest
+    - name: install python-augeas
+      pip:
+        name: python-augeas 
+        extra_args: "--proxy http://proxy.det.nsw.edu.au:80"
