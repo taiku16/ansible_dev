@@ -30,5 +30,5 @@
       easy_install: name=pip state=latest
     - name: install python-augeas
       pip:
-        name: python-augeas 
+        name: python-augeas
         extra_args: "--proxy http://proxy.det.nsw.edu.au:80"
