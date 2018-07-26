@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: create bin dir in tyrone home
+      file:
+        path: /home/tyrone/bin
+        owner: tyrone
+        group: trinidad
+        mode: 0755
+        state: directory

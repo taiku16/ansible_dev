@@ -1,0 +1,35 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+    - name: create new VG
+      lvg:
+        vg: app0
+        pvs: /dev/sdb
+        state: present
+    - name: creat new LV
+      lvol:
+        vg: app0
+        lv: lv1
+        state: present
+        size: 90%VG
+        force: yes
+    - name: format LV
+      filesystem:
+        fstype: xfs
+        dev: /dev/app0/lv1
+        resizefs: yes
+    - name: create folder to mount
+      file:
+        path: /home/app0usr
+        state: directory
+        owner: tyrone
+        group: trinidad
+        mode: 0755
+    - name: mount folder
+      mount:
+        path: /home/app0usr
+        src: /dev/app0/lv1
+        state: mounted
+        fstype: xfs

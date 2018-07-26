@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: "add a line to /etc/hosts.allow"
+      lineinfile:
+        path: /etc/hosts.allow
+        line: "ALL: 10.48.0.0/13, 192.168.0.0/16, 10.56.26.76/32"
+        state: absent
+    - name: "add few more lines in /etc/hosts.allow"
+      blockinfile:
+        path: /etc/hosts.allow
+        block: |
+          ALL: 10.48.0.0/13, 192.168.0.0/16
+          ALL: 10.48.0.0/13, 192.168.0.0/16
+        state: absent  
