@@ -1,0 +1,5 @@
+- name: Configure NTP  
+  include_tasks: "{{ item }}"
+  with_items:
+    - ntp.yml
+    - hostsallow.yml
