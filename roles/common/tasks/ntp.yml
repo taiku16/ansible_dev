@@ -1,0 +1,16 @@
+- name: Install NTP and NTPDATE packages
+  yum:
+    name: ntp
+    disablerepo: RHEL7
+- name: Config NTP
+  copy:
+    src: ntp.conf
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: Enable NTP service
+  systemd:
+    name: ntpd
+    state: started
+    enabled: true
