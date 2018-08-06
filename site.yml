@@ -2,4 +2,5 @@
   become: yes
   become_method: sudo
   roles:
-    - common
+#    - common
+    - soe_misc

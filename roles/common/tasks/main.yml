@@ -1,4 +1,4 @@
-- name: Configure NTP  
+- name: Run role/common plays
   include_tasks: "{{ item }}"
   with_items:
     - ntp.yml

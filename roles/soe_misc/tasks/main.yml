@@ -1,0 +1,5 @@
+- name: Run role/soe_misc plays
+  include_tasks: "{{ item }}"
+  with_items:
+    - soe_misc.yml
+
