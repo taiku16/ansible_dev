@@ -1,5 +1,6 @@
 - name: Run role/common plays
   include_tasks: "{{ item }}"
+  when: is_centos
   with_items:
     - ntp.yml
     - hostsallow.yml
