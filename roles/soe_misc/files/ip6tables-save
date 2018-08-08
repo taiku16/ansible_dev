@@ -1,8 +1,0 @@
-#!/bin/bash
-
-REAL="/sbin/ip6tables-save"
-if [ -f "/proc/net/ip6_tables_names" ]; then
-   exec $REAL "$@"
-fi
-
-exit 0
