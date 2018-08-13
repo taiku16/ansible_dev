@@ -1,0 +1,4 @@
+- name: "Config PAM limits"
+  blockinfile:
+    path: /etc/security/limits.conf
+    block: "{{limits_fragment}}"

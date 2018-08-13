@@ -3,6 +3,7 @@
   become_method: sudo
   vars_files:
     - vars/os.yml
+    - group_vars/common.yml
   roles:
-#    - common
+    - common
     - soe-misc

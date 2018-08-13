@@ -13,11 +13,13 @@
   file:
     path: /u01
     state: directory
+  when: cloud_env == 'classic'
 - name: Symlink /u01/home to /home
   file:
     src: /home
     dest: /u01/home
     state: link
+  when: cloud_env == 'classic'  
 
 # Some files have been marked immutable to stop cfengine touching them
 # 1. ew

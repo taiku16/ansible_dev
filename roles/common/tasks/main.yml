@@ -2,5 +2,7 @@
   include_tasks: "{{ item }}"
   when: is_centos
   with_items:
+    - gather_facts.yml
     - ntp.yml
     - hostsallow.yml
+    - limits.yml

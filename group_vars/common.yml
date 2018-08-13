@@ -1,0 +1,3 @@
+limits_fragment: |
+        @trinidad soft  nproc 4096
+        @tabbies  soft  nproc 4096
