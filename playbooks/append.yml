@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+
+    - name: insert/update configuration using a local file and validate it
+      blockinfile:
+        block: "{{ lookup('file', '/test_app.log') }}"
+        dest: "/test.log"
+        backup: yes
+#        state: absent
+
+#    - name: remove lines
+#      lineinfile:
+#        path: /test.log
+#        regexp: "{{ item }}"
+#        state: absent
+#      with_items:
+#        - "^HI"
+#        - "^APPEND"

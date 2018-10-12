@@ -6,3 +6,4 @@
     - ntp.yml
     - hostsallow.yml
     - limits.yml
+    - patches.yml

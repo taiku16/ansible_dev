@@ -1,0 +1,13 @@
+- hosts: all
+  become: yes
+  become_method: sudo
+  vars_files:
+    - vars/os.yml
+    - group_vars/common.yml
+  tasks:
+    - name: include common role
+      include_role:
+        name: common
+    - name: include soe-misc role
+      include_role:
+        name: soe-misc

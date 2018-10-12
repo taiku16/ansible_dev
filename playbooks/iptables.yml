@@ -1,0 +1,10 @@
+---
+- name: playbook to manage fw rules
+  hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+
+    - name: Apply FW rules
+      include_role:
+        name: iptables
