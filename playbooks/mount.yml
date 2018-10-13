@@ -1,0 +1,24 @@
+---
+- name: PB to resize lvol
+  hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+
+    - name: Refresh PV
+      shell: pvresize /dev/sdb
+
+    - name: Expand lvol
+      lvol:
+        vg: app0
+        lv: lv1
+        size: +100%FREE
+        resizefs: true
+
+    - name: Define FS
+      filesystem:
+        dev: /dev/app0/lv1
+        fstype: xfs
+
+ 
+  

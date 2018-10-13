@@ -9,6 +9,8 @@
     owner: root
     group: root
     mode: 0644
+  notify:
+    - restart ntpd
 - name: Enable NTP service
   systemd:
     name: ntpd

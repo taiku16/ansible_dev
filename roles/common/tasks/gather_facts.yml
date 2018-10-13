@@ -1,0 +1,4 @@
+- name: "Set facts!"
+  set_fact:
+    cloud_env: classic
+

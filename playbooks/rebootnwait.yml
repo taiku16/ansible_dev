@@ -1,0 +1,12 @@
+---
+- name: Reboot and wait server
+  hosts: all
+  become_method: sudo
+  tasks:
+    - name: Restart server
+      become: yes
+      shell: sleep 5 && systemctl reboot
+
+    - name: Wait 30s for server to come back
+      local_action: wait_for host={{ ansible_default_ipv4.address }} port=22 state=started delay=30 timeout=60
+      become: false

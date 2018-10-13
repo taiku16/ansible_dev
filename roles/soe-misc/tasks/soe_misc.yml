@@ -1,0 +1,109 @@
+# Miscellaneous DEC-specific snippets that get rolled out everywhere
+- name: "Create cron: inventory"
+  cron:
+    name: "inventory"
+    job: '/software/bin/collectinv >/dev/null 2>&1'
+    hour: "*"
+    minute: "5"
+    user: root
+    state: present
+
+# Cater for old home dirs using u01 - make sure not on /
+- name: "Create old home dirs using u01"
+  file:
+    path: /u01
+    state: directory
+  when: cloud_env == 'classic'
+- name: Symlink /u01/home to /home
+  file:
+    src: /home
+    dest: /u01/home
+    state: link
+  when: cloud_env == 'classic'  
+
+# Some files have been marked immutable to stop cfengine touching them
+# 1. ew
+# 2. Keep this cronjob around until we've fully removed all such immutable
+#    files from our infrastructure.
+# 3. Delete the old cron.daily version of this check.
+- name: "Create cron: find-immutable"
+  cron: 
+    name: "find-immutable"
+    job: > 
+        /usr/bin/lsattr -Ra 2>/dev/null /etc | awk '$1 ~ /i/ && $1 !~ /^\// { print "Immutable_file="$2 }' | logger -p local0.notice -t find_immutable
+    user: root
+    hour: "3"
+    minute: "30"
+    state: present
+- name: "Remove crond.daily version"
+  file: 
+    path: /etc/cron.daily/find-immutable
+    state: absent
+
+# Scan the /etc /usr/bin and /bin directories for files that are world
+# writable. Output to syslog so we can generate a report from Splunk.
+- name: "Create cron: find-worldwritable"
+  cron: 
+    name: "find-worldwritable"
+    job: >
+        find /etc/ /usr/bin/ /bin/ -perm -2 ! -type l | awk '{ print "file="$1 }' | logger -p local0.notice -t find_worldwritable
+    user: root
+    hour: "3"
+    minute: "45"
+    state: present
+- name: "Remove crond.daily version"
+  file: 
+    path: /etc/cron.daily/find-worldwrite
+    state: absent
+    
+# This isn't managed anywhere else, so here is good enough.    
+- name: "Manage DET sbin directories"
+  file:
+    path: /opt/DET/sbin
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+- name: "Manage DET bin directories"
+  file:
+    path: /opt/DET/bin
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+- name: "Create updatedb.conf file"
+  copy:
+    src: updatedb.conf
+    dest: /etc/updatedb.conf
+
+# These scripts are moving in from /software, an NFS share. Can't rely on
+# /software being mounted.
+- name: "Create netgroup script"
+  copy:
+    src: netgroup
+    dest: /opt/DET/bin/netgroup
+    owner: root
+    group: root
+    mode: 0755
+
+# Run rhn-profile-sync on boot to ensure that Satellite always has current
+# information. This is safe on all systems, if rhn-profile-sync doesn't exist
+# (eg. RHEL4) then it'll exit cleanly.
+- name: "Create satellite sync script"
+  copy:
+    src: satellite-sync.bin
+    dest: /usr/local/bin/satellite-sync  
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Run satellite sync on boot"
+  copy:
+    src: satellite-sync.cron
+    dest: /etc/cron.d/satellite-sync
+    owner: root
+    group: root
+    mode: 0644
+
+
+

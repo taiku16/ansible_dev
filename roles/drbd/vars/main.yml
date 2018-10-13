@@ -1,0 +1,21 @@
+---
+# vars file for drbd
+drbd_packages:
+  - drbd84-utils
+  - kmod-drbd84
+  - tmux
+
+drbd_volume_groups:
+  - name: 'app0'
+    physical_volumes:
+      - '/dev/sdb'
+    logical_volumes:
+      data:
+        size: '10G'
+        fs_type: 'xfs'
+        mountpath: '/export/data'
+      log:
+        size: '5G'
+        fs_type: 'xfs'
+        mountpath: '/export/log'
+

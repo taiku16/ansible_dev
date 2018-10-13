@@ -1,0 +1,59 @@
+---
+# tasks file for iptables
+- name: "Role to manage FW rules - INPUT"
+  iptables:
+    action: insert
+    chain: INPUT
+    rule_num: 2
+    comment: Temp FW rule for JE7
+    source: 10.7.38.0/23
+    reject_with: icmp-port-unreachable
+    state: absent
+
+- name: "Role to manage FW rules - OUTPUT"
+  iptables:
+    action: insert
+    chain: OUTPUT
+    rule_num: 2
+    comment: Temp FW rule for JE7
+    destination: 10.7.38.0/23
+    reject_with: icmp-port-unreachable
+    state: absent
+
+- name: Recreate using vars
+  iptables:
+    action: "{{ item.action }}"
+    chain: "{{ item.chain }}"
+    rule_num: "{{ item.rule_num }}"
+    comment: "{{ item.comment }}"
+    source: "{{ item.source }}"
+    destination: "{{ item.destination }}"
+    reject_with: "{{ item.reject_with }}"
+    state: "{{ item.state }}"
+  with_items: "{{ iptables_rules }}"
+#  when: "{{ item.source }}" is defined and "{{ item.destination }}" is defined
+
+#- name: Recreate using vars, src is not defined
+#  iptables:
+#    action: "{{ item.action }}"
+#    chain: "{{ item.chain }}"
+#    rule_num: "{{ item.rule_num }}"
+#    comment: "{{ item.comment }}"
+#    destination: "{{ item.destination }}"
+#    reject_with: "{{ item.reject_with }}"
+#    state: "{{ item.state }}"
+#  with_items: "{{ iptables_rules }}"
+#  when: "{{ item.source }}" is not defined
+#
+#- name: Recreate using vars, dst is not defined
+#  iptables:
+#    action: "{{ item.action }}"
+#    chain: "{{ item.chain }}"
+#    rule_num: "{{ item.rule_num }}"
+#    comment: "{{ item.comment }}"
+#    source: "{{ item.source }}"
+#    reject_with: "{{ item.reject_with }}"
+#    state: "{{ item.state }}"
+#  with_items: "{{ iptables_rules }}"
+#  when: "{{ item.destination }}" is not defined
+

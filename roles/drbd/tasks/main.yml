@@ -1,0 +1,50 @@
+---
+# tasks file for drbd
+- name: Import ELRepo public key
+  shell: rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org --httpproxy proxy.det.nsw.edu.au --httpport 80
+  ignore_errors: true
+
+- name: Install ELRepo for RHEL7
+  shell: rpm -Uvh https://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm --httpproxy proxy.det.nsw.edu.au --httpport 80
+  ignore_errors: true
+
+- name: Install DRBD 8.4 packages
+  yum:
+    name: "{{ drbd_packages }}"
+
+- name: Create VG
+  lvg:
+    vg: "{{ item.name }}"
+    pvs: "{{ item.volume_groups }}"
+  loop: "{{ drbd_volume_groups }}"  
+
+- name: Create LVMs
+  lvol:
+    vg: "{{ drbd_volume_groups }}"
+    lv: "{{ item }}"
+    size: "{{ item.size }}" 
+    resizefs: yes
+  loop: "{{ drbd_volume_groups.logical_volumes }}"
+
+- name: Create filesystems
+  filesystem:
+    dev: "/dev/{{ drbd_volume_groups }}/{{ item }}"
+    fstype: "{{ item.fs_type }}"
+    resizefs: yes
+  loop: "{{ drbd_volume_groups.logical_volumes }}"
+
+- name: Create mount points
+  file:
+    path: "{{ item.mounthpath }}"
+    state: directory
+  loop: "{{ drbd_volume_groups.logical_volumes }}"
+
+- name: Mount LVMs
+  mount:
+    path: "{{ item.mounthpath }}"
+    src: "/dev/{{ drbd_volume_groups }}/{{ item }}"
+    state: mounted
+  loop: "{{ drbd_volume_groups.logical_volumes }}"
+
+
+

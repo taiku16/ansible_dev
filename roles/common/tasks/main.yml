@@ -1,5 +1,9 @@
-- name: Configure NTP  
+- name: Run role/common plays
   include_tasks: "{{ item }}"
+  when: is_centos
   with_items:
+    - gather_facts.yml
     - ntp.yml
     - hostsallow.yml
+    - limits.yml
+    - patches.yml
