@@ -15,36 +15,45 @@
 - name: Create VG
   lvg:
     vg: "{{ item.name }}"
-    pvs: "{{ item.volume_groups }}"
+    pvs: "{{ item.physical_volumes }}"
   loop: "{{ drbd_volume_groups }}"  
 
 - name: Create LVMs
   lvol:
-    vg: "{{ drbd_volume_groups }}"
-    lv: "{{ item }}"
-    size: "{{ item.size }}" 
+    vg: "{{ item.0.name }}"
+    lv: "{{ item.1.name }}"
+    size: "{{ item.1.size }}" 
     resizefs: yes
-  loop: "{{ drbd_volume_groups.logical_volumes }}"
+  with_subelements:
+    - "{{ drbd_volume_groups }}"
+    - logical_volumes
 
 - name: Create filesystems
   filesystem:
-    dev: "/dev/{{ drbd_volume_groups }}/{{ item }}"
-    fstype: "{{ item.fs_type }}"
-    resizefs: yes
-  loop: "{{ drbd_volume_groups.logical_volumes }}"
+    dev: "/dev/{{ item.0.name }}/{{ item.1.name }}"
+    fstype: "{{ item.1.fs_type }}"
+    resizefs: no
+  with_subelements:
+    - "{{ drbd_volume_groups }}"
+    - logical_volumes
 
 - name: Create mount points
   file:
-    path: "{{ item.mounthpath }}"
+    path: "{{ item.1.mountpath }}"
     state: directory
-  loop: "{{ drbd_volume_groups.logical_volumes }}"
+  with_subelements:
+    - "{{ drbd_volume_groups }}"
+    - logical_volumes
 
 - name: Mount LVMs
   mount:
-    path: "{{ item.mounthpath }}"
-    src: "/dev/{{ drbd_volume_groups }}/{{ item }}"
+    path: "{{ item.1.mountpath }}"
+    src: "/dev/{{ item.0.name }}/{{ item.1.name }}"
+    fstype: "{{ item.1.fs_type }}"
     state: mounted
-  loop: "{{ drbd_volume_groups.logical_volumes }}"
+  with_subelements:
+    - "{{ drbd_volume_groups }}"
+    - logical_volumes
 
 
 
