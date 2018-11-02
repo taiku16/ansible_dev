@@ -1,0 +1,11 @@
+---
+- name: Play to check IPv4 addresses
+  hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+
+    - name: Get IPv4 addresses
+      debug:
+        msg: "{{ ansible_nodename }} has the following IPs: {{ ansible_eth0.ipv4.address }} / {{ ansible_eth1.ipv4.address }}"
+
