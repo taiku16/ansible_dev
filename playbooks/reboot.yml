@@ -1,0 +1,14 @@
+---
+- name: Reboot servers
+  hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+
+    - name: Run reboot command
+      reboot:
+      register: reboot_result
+
+    - name: Reboot result
+      debug: 
+        var: reboot_result

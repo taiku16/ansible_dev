@@ -6,16 +6,16 @@ drbd_packages:
   - tmux
 
 drbd_volume_groups:
-  - name: 'app0'
+  - name: app0
     physical_volumes:
-      - '/dev/sdb'
+      - /dev/sdb
     logical_volumes:
-      data:
+      - name: 'data'
         size: '10G'
         fs_type: 'xfs'
         mountpath: '/export/data'
-      log:
-        size: '5G'
+      - name: 'log'
+        size: '4G'
         fs_type: 'xfs'
         mountpath: '/export/log'
 

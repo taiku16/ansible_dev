@@ -1,23 +1,23 @@
 ---
 # vars for role/iptables
 iptables_rules:
-  - name: INPUT FW rule for JE7
+  - name: INPUT FW rule
     action: insert
     chain: INPUT
     rule_num: 2
-    comment: Temp FW rule for JE7
-    source: 10.7.38.0/23
+    comment: Temp FW rule
+    source: 192.168.44.0/24
     destination: 0.0.0.0/0
     reject_with: icmp-port-unreachable
     state: present
     
-  - name: OUTPUT FW rule for JE7
+  - name: OUTPUT FW rule
     action: insert
     chain: OUTPUT
     rule_num: 2
-    comment: Temp FW rule for JE7
+    comment: Temp FW rule
     source: 0.0.0.0/0
-    destination: 10.7.38.0/23
+    destination: 192.168.44.0/24
     reject_with: icmp-port-unreachable
     state: present
     
