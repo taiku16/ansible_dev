@@ -1,0 +1,16 @@
+- name: Playbook with tags
+  hosts: localhost
+
+  tasks:
+    
+    - name: Run when green
+      include_role:
+        name: test_tags
+        tasks_from: green_tag.yml
+      tags: green
+
+    - name: Run when red
+      include_role:
+        name: test_tags
+        tasks_from: red_tag.yml
+      tags: red
