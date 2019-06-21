@@ -1,0 +1,10 @@
+---
+# tasks file for test_tags
+- name: Run this if tag is GREEN
+  debug:
+    msg: "Tag is GREEN"
+  tags: green
+- name: Run this if tag is RED
+  debug:
+    msg: "Tag is RED"
+  tags: red
